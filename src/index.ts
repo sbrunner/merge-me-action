@@ -5,6 +5,7 @@ import {
   checkSuiteHandle,
   pullRequestHandle,
   pushHandle,
+  workflowRunHandle,
 } from './eventHandlers';
 import { logInfo, logWarning } from './utilities/log';
 
@@ -29,6 +30,8 @@ const main = async (): Promise<void> => {
       return pullRequestHandle(octokit, GITHUB_LOGIN, MAXIMUM_RETRIES);
     case 'push':
       return pushHandle(octokit, GITHUB_LOGIN, MAXIMUM_RETRIES);
+    case 'workflow_run':
+      return workflowRunHandle(octokit, GITHUB_LOGIN, MAXIMUM_RETRIES);
     default:
       logWarning(`Unknown event ${context.eventName}, skipping.`);
   }
@@ -36,8 +39,7 @@ const main = async (): Promise<void> => {
 
 main().catch((error: Error): void => {
   setFailed(
-    `An unexpected error occurred: ${error.message}, ${
-      error.stack ?? 'no stack trace'
+    `An unexpected error occurred: ${error.message}, ${error.stack ?? 'no stack trace'
     }.`,
   );
 });

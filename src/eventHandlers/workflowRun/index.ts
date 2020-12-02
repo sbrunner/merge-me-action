@@ -135,12 +135,13 @@ const tryMerge = async (
   }
 };
 
-export const checkSuiteHandle = async (
+export const workflowRunHandle = async (
   octokit: ReturnType<typeof getOctokit>,
   gitHubLogin: string,
   maximumRetries: number,
 ): Promise<void> => {
-  const pullRequests = context.payload.check_suite.pull_requests as Array<{
+  console.log(context);
+  const pullRequests = context.event.workflowRun.pull_requests as Array<{
     number: number;
   }>;
 
