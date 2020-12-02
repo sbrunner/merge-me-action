@@ -7,7 +7,7 @@ import { getOctokit } from '@actions/github';
 import { OK } from 'http-status-codes';
 import * as nock from 'nock';
 
-import { checkSuiteHandle } from '.';
+import { continuousIntegrationEndHandle } from '.';
 
 /* cspell:disable-next-line */
 const PULL_REQUEST_ID = 'MDExOlB1bGxSZXF1ZXN0MzE3MDI5MjU4';
@@ -22,7 +22,7 @@ beforeEach((): void => {
   getInputSpy.mockReturnValue('DEPENDABOT_PATCH');
 });
 
-describe('check suite event handler', (): void => {
+describe('continuous integration end event handler', (): void => {
   describe('for a dependabot initiated pull request', (): void => {
     it('does nothing if the PR title contains a major bump but PRESET specifies DEPENDABOT_PATCH', async (): Promise<void> => {
       expect.assertions(0);
@@ -58,7 +58,7 @@ describe('check suite event handler', (): void => {
           },
         });
 
-      await checkSuiteHandle(octokit, 'dependabot-preview[bot]', 2);
+      await continuousIntegrationEndHandle(octokit, 'dependabot-preview[bot]', 2);
     });
   });
 });

@@ -37,7 +37,7 @@ interface Repository {
   };
 }
 
-export interface PullRequestInformationCheckSuite
+export interface PullRequestInformationContinuousIntegrationEnd
   extends PullRequestInformation {
   commitMessageHeadline: string;
   mergeStateStatus: MergeStateStatus;
@@ -50,7 +50,7 @@ const getPullRequestInformation = async (
     repositoryName: string;
     repositoryOwner: string;
   },
-): Promise<PullRequestInformationCheckSuite | undefined> => {
+): Promise<PullRequestInformationContinuousIntegrationEnd | undefined> => {
   const response = await octokit.graphql(findPullRequestInformation, query);
 
   if (response === null || response.repository.pullRequest === null) {
@@ -104,7 +104,7 @@ const tryMerge = async (
     pullRequestState,
     pullRequestTitle,
     reviewEdges,
-  }: PullRequestInformationCheckSuite,
+  }: PullRequestInformationContinuousIntegrationEnd,
 ): Promise<void> => {
   if (mergeableState !== 'MERGEABLE') {
     logInfo(`Pull request is not in a mergeable state: ${mergeableState}.`);
@@ -141,12 +141,15 @@ const tryMerge = async (
   }
 };
 
-export const checkSuiteHandle = async (
+export const continuousIntegrationEndHandle = async (
   octokit: ReturnType<typeof getOctokit>,
   gitHubLogin: string,
   maximumRetries: number,
 ): Promise<void> => {
-  const pullRequests = context.payload.check_suite.pull_requests as Array<{
+  const pullRequests = (context.eventName === 'workflow_run'
+    ? context.payload.workflow_run
+    : context.payload.check_suite
+  ).pull_requests as Array<{
     number: number;
   }>;
 
