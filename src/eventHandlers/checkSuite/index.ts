@@ -140,7 +140,10 @@ export const checkSuiteHandle = async (
   gitHubLogin: string,
   maximumRetries: number,
 ): Promise<void> => {
-  const pullRequests = context.payload.check_suite.pull_requests as Array<{
+  const pullRequests = (context.eventName === 'workflow_run'
+    ? context.payload.workflow_run
+    : context.payload.check_suite
+  ).pull_requests as Array<{
     number: number;
   }>;
 
