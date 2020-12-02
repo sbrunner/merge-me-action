@@ -141,7 +141,7 @@ export const workflowRunHandle = async (
   maximumRetries: number,
 ): Promise<void> => {
   console.log(context);
-  const pullRequests = context.payload.workflowRun.pull_requests as Array<{
+  const pullRequests = context.payload.workflow_run.pull_requests as Array<{
     number: number;
   }>;
 
